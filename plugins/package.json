@@ -1,0 +1,39 @@
+{
+  "name": "async_files_webpack_pulgin",
+  "version": "1.0.0",
+  "description": "async build files __dist floder file async",
+  "main": "index.js",
+  "scripts": {
+    "lint": "eslint --format=codeframe .",
+    "test": "jasmine test/unit/* test/webpack*/index.js",
+    "coverage": "nyc npm run test",
+    "clean": "rimraf build",
+    "build": "npm run clean && babel --out-dir=build src",
+    "publish-stable": "npm run lint && npm run test && npm run build && npm publish",
+    "publish-next": "npm run lint && npm run test && npm run build && npm publish --tag next"
+  },
+  "keywords": [
+    "async",
+    "build",
+    "floder"
+  ],
+  "author": "photoqiu",
+  "license": "MIT",
+  "devDependencies": {
+    "@babel/cli": "^7.12.10",
+    "@babel/core": "^7.12.10",
+    "@babel/preset-env": "^7.12.11",
+    "eslint": "^7.17.0",
+    "eslint-config-google": "^0.14.0",
+    "jasmine": "^3.6.3",
+    "jsdom": "^16.4.0",
+    "memory-fs": "^0.5.0",
+    "nyc": "^15.1.0",
+    "rimraf": "^3.0.2"
+  },
+  "dependencies": {
+    "lodash": "^4.17.20",
+    "progress": "^2.0.3",
+    "ssh2-sftp-client": "^6.0.1"
+  }
+}
