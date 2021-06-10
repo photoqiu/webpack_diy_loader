@@ -11,7 +11,6 @@
 const postcss = require('postcss');
 const pxToVwViewport = require('./plugins/index');
 const objectAssign = require('object-assign');
-
 var defaults = {
     unitToConvert: 'px',
     viewportWidth: 320,
@@ -28,19 +27,48 @@ var defaults = {
     landscapeUnit: 'vw',
     landscapeWidth: 568
 };
-console.log("111111111111111");
-module.exports = (opts = {}) => {
-  var options = Object.assign(defaults, opts);
+console.log("11111111111");
+module.exports = (options = {}) => {
+  const opts = Object.assign(defaults, options);
+  const getUnitRegexp = (unit) => {
+      return new RegExp(
+          "\"[^\"]+\"|'[^']+'|url\\([^\\)]+\\)|(\\d*\\.?\\d+)" + unit, "g"
+      );
+  };
+  const pxRegex = getUnitRegexp(opts.unitToConvert);
+  const toFixed = (number, precision) => {
+      var multiplier = Math.pow(10, precision + 1),
+          wholeNumber = Math.floor(number * multiplier);
+      return (Math.round(wholeNumber / 10) * 10) / multiplier;
+  };
+  const createPxReplace = (opts) => {
+      return function (m, $1) {
+          if (!$1) return m;
+          var pixels = parseFloat($1);
+          if (pixels <= opts.minPixelValue) return m;
+          var parsedVal = toFixed(
+              (pixels / opts.viewportWidth) * 100,
+              opts.unitPrecision
+          );
+          return parsedVal === 0 ? "0" : parsedVal + opts.viewportUnit;
+      };
+  }
+  const px2vw = (source, opts = defaults) => {
+      return source.replace(pxRegex, createPxReplace(opts));
+  };
+  debugger;
   return {
     postcssPlugin: 'styled-jsx-plugin-postcss-px-vw',
-    Once (root) {
-      pxToVwViewport(root, options);
-      // console.log("root:", root);
-      // Calls once per file, since every file has single Root
+    Once: async (root, helpers) => {
+      const vwStyle = px2vw(root.source.input.css, opts);
+      console.log("1111111111111111111111 root:", root);
+      console.log("3333333333333333333333 root:", root.source.input.css);
+      console.log("2222222222222222222222 root:", vwStyle);
     },
     Declaration (decl) {
-      //console.log("decl:", decl);
-      // All declaration nodes
+      // console.log("2222222222222");
+      // const vwStyle = px2vw(decl.source.input.css, opts);
+      // console.log("decl:", decl, decl.source.input.css);
     }
   }
 }

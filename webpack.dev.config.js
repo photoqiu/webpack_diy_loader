@@ -23,6 +23,7 @@
  *             └──┴──┘       └──┴──┘
  *
  *        神兽保佑 （神兽来源与网络） 代码无BUG!
+ *        npm run dev >log.txt 2>&1
  *
  **/
 const path = require('path')

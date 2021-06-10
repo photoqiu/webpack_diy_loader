@@ -9,12 +9,11 @@
 'use strict';
 
 var fs = require('fs');
-var pxToViewport = require('..');
+var styledJsxPluginPostcssPxVw = require('..');
 var css = fs.readFileSync('main.css', 'utf8');
+var processedCss = styledJsxPluginPostcssPxVw({}, css);
 
-var processedCss = pxToViewport.process(css).css;
-
-fs.writeFile('main-viewport.css', processedCss, function (err) {
+fs.writeFile('main-viewport.prod.css', processedCss, function (err) {
   if (err) {
     throw err;
   }
